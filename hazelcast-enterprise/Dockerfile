@@ -11,10 +11,9 @@ RUN \
   mv hazelcast-enterprise-$HZ_VERSION hazelcast && \
   apk del build-dependencies
 
-ADD server.sh $HZ_HOME/server.sh
-RUN chmod +x $HZ_HOME/server.sh
-
 WORKDIR $HZ_HOME
-CMD ./server.sh
-
-EXPOSE 5701
+CMD java -server -Djava.net.preferIPv4Stack=true \
+    -cp lib/hazelcast-enterprise-all-$HZ_VERSION.jar \
+    $JAVA_OPTS \
+    -Dhazelcast.enterprise.license.key=$HZ_LICENSE_KEY \
+    com.hazelcast.core.server.StartServer
